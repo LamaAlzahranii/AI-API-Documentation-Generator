@@ -1,46 +1,85 @@
-import os
-from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    base_url="http://localhost:11434/v1",
+    api_key="ollama"
+)
 
 system_prompt = """
 You are a Senior .NET API Documentation Expert.
 
-Analyze the provided ASP.NET Core Controller and generate professional API documentation in Markdown.
+Analyze the provided ASP.NET Core Controller and generate a clean, professional API documentation document in Markdown.
 
-Include:
-- API Name
-- Overview
-- Endpoint
-- Request Parameters
-- Request Body
-- Response Codes
-- Authentication
-- Sample Request
-- Sample Response
-- Notes
+Requirements:
+- Use professional headings.
+- Use Markdown tables whenever appropriate.
+- Explain the endpoint clearly.
+- Generate realistic request and response examples.
+- Do not mention assumptions.
+- Format the document so it is ready to publish.
 
-Use headings and markdown tables.
+Sections:
+
+# API Documentation
+
+## API Name
+
+## Overview
+
+## Endpoint
+
+| Property | Value |
+
+## Request Parameters
+
+## Request Body
+
+## Response Codes
+
+| Status | Description |
+
+## Authentication
+
+## Sample Request
+
+## Sample Response
+
+## Notes
 """
-
-def generate_documentation(controller):
-
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": controller}
-        ]
-    )
-
-    return response.choices[0].message.content
-
 
 controller = """
-ضع هنا أي Controller من .NET
+[ApiController]
+[Route("api/employees")]
+public class EmployeesController : ControllerBase
+{
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateEmployeeDto dto)
+    {
+        return Ok();
+    }
+}
 """
 
-print(generate_documentation(controller))
+response = client.chat.completions.create(
+    model="llama3.2",
+    messages=[
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": controller}
+    ]
+)
+
+documentation = response.choices[0].message.content
+
+import os
+
+# Create output folder if it doesn't exist
+os.makedirs("output", exist_ok=True)
+
+# Save the documentation
+file_path = "output/API_Documentation.md"
+
+with open(file_path, "w", encoding="utf-8") as file:
+    file.write(documentation)
+
+print(f"✅ API documentation saved successfully!")
+print(f"📄 File location: {file_path}")
