@@ -1,48 +1,63 @@
 # AI API Documentation Generator 🚀
 
-An AI-powered tool that automatically analyzes **ASP.NET Core APIs** and generates professional API documentation using **Local LLMs**.
+An AI-powered tool that analyzes **ASP.NET Core Controllers** and automatically generates API Documentation using local Large Language Models (LLMs).
 
-The project uses **Python + Ollama + Llama 3.2** to analyze controllers, extract API information, and generate structured API documentation in Markdown format.
+The project uses **Python, Ollama, and Llama 3.2** to understand API structure, extract endpoint information, and generate professional documentation in Markdown format.
 
 ---
 
 ## 📌 Overview
 
-Writing and maintaining API documentation is an important part of building professional APIs. However, keeping documentation updated during continuous development can be challenging.
+API Documentation is an essential part of building professional APIs. It helps developers and integration teams understand available services, endpoints, request requirements, and responses.
 
-This project explores how AI can help automate this process by analyzing backend code and generating documentation automatically.
+However, keeping documentation updated during continuous development can be challenging.
 
-The goal is not only to generate text using an LLM, but to build an AI workflow that understands the API structure and produces reusable documentation.
+This project explores how AI can assist developers by automatically generating API documentation from existing ASP.NET Core Controller code.
 
 ---
 
 ## ✨ Features
 
-✅ Analyze ASP.NET Core Controllers using AI
-✅ Extract API metadata and endpoint information
-✅ Generate structured API documentation automatically
-✅ Use local LLM execution with Ollama
-✅ No dependency on external AI services
-✅ Generate Markdown documentation ready for publishing
-✅ Streaming output during documentation generation
+* Analyze ASP.NET Core Controllers using AI
+
+* Extract API endpoint information
+
+* Identify:
+
+  * Controller name
+  * Base route
+  * HTTP methods
+  * API routes
+  * Request DTO references
+  * Response types
+  * Authorization information
+  * Possible status codes
+
+* Generate professional API Documentation in Markdown format
+
+* Use local LLM execution with Ollama
+
+* Stream generated documentation in real time
+
+* No dependency on external AI APIs
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ AI Workflow
 
-The solution follows a multi-step AI workflow:
+The project follows a multi-step LLM workflow:
 
 ```
 ASP.NET Core Controller
           |
           ▼
-   LLM Analysis Layer
+   LLM Analysis
           |
           ▼
  Structured API JSON
           |
           ▼
- Context Builder
+ Context Preparation
           |
           ▼
  Documentation Generation LLM
@@ -53,22 +68,13 @@ ASP.NET Core Controller
 
 ---
 
-## 🔄 Workflow
+## 🔄 How It Works
 
 ### 1. API Analysis
 
-The first LLM call analyzes the ASP.NET Core Controller and extracts:
+The first LLM call analyzes the provided ASP.NET Core Controller and extracts API metadata.
 
-* Controller name
-* Base route
-* HTTP methods
-* Endpoints
-* Request DTOs
-* Response types
-* Authorization information
-* Status codes
-
-Example output:
+Example:
 
 ```json
 {
@@ -79,6 +85,7 @@ Example output:
       "http_method": "POST",
       "route": "/",
       "request_dto": "CreateEmployeeDto",
+      "response_type": "IActionResult",
       "possible_status_codes": [
         201
       ]
@@ -91,9 +98,11 @@ Example output:
 
 ### 2. Documentation Generation
 
-The extracted API information is combined with the controller source code and sent to the documentation generation layer.
+The extracted API information is combined with the controller source code and sent to the documentation generation step.
 
-The second LLM generates a professional API document:
+The second LLM generates a structured API document:
+
+Example:
 
 ```
 API Documentation
@@ -101,11 +110,14 @@ API Documentation
 API Name:
 Employees API
 
+Overview:
+Creates a new employee.
+
 Endpoint:
 POST /api/employees
 
 Request Body:
-- Employee fields
+CreateEmployeeDto
 
 Response:
 201 Created
@@ -121,6 +133,26 @@ Response:
 * OpenAI Compatible API
 * ASP.NET Core
 * Markdown
+
+---
+
+## 📂 Project Structure
+
+```
+AI-API-Documentation/
+
+│
+├── main.py
+├── analyzer.py
+├── documentation.py
+├── context_builder.py
+├── prompts.py
+│
+├── output/
+│   └── API_Documentation.md
+│
+└── README.md
+```
 
 ---
 
@@ -140,15 +172,15 @@ git clone https://github.com/LamaAlzahranii/AI-API-Documentation-Generator.git
 python -m venv .venv
 ```
 
-Activate it:
+Activate:
 
-**Mac/Linux**
+#### macOS / Linux
 
 ```bash
 source .venv/bin/activate
 ```
 
-**Windows**
+#### Windows
 
 ```bash
 .venv\Scripts\activate
@@ -164,13 +196,13 @@ pip install -r requirements.txt
 
 ---
 
-### 4. Install and run Ollama
+### 4. Setup Ollama
 
 Install Ollama:
 
 https://ollama.com
 
-Download the required model:
+Download Llama 3.2:
 
 ```bash
 ollama pull llama3.2
@@ -186,74 +218,54 @@ ollama serve
 
 ## ▶️ Usage
 
-Run the application:
+Run:
 
 ```bash
 python main.py
 ```
 
-The generated documentation will be saved automatically:
+The generated documentation will be saved:
 
 ```
-output/
- └── API_Documentation.md
-```
-
----
-
-## 📂 Project Structure
-
-```
-AI-API-Documentation-Generator/
-
-│
-├── main.py
-├── analyzer.py
-├── documentation.py
-├── context_builder.py
-├── prompts.py
-│
-├── output/
-│   └── API_Documentation.md
-│
-└── README.md
+output/API_Documentation.md
 ```
 
 ---
 
-## 🎯 Future Improvements
+## 🎯 Current Scope
 
-Possible future enhancements:
+The current version focuses on analyzing individual ASP.NET Core Controllers.
 
-* Automatically scan complete .NET solutions
-* Extract DTO and model definitions
-* Integrate with Swagger/OpenAPI specifications
-* Generate documentation for multiple APIs
-* Add API documentation versioning
-* Build a web interface for enterprise usage
-* Integrate with CI/CD pipelines
+Future improvements may include:
+
+* Automatically reading complete .NET projects
+* Extracting DTO definitions
+* Integrating Swagger/OpenAPI specifications
+* Supporting multiple controllers
+* Adding CI/CD integration
+* Building a web interface
 
 ---
 
 ## 💡 Why Local AI?
 
-Using local LLMs provides:
+This project uses local LLM execution to provide:
 
 * Better control over data
-* No dependency on external APIs
-* Ability to customize the workflow
-* Potential integration with enterprise environments
+* Customizable AI workflows
+* No dependency on external AI services
+* Future integration possibilities within enterprise environments
 
 ---
 
-## 🤝 Contribution
+## 🤝 Contributions
 
-Feedback, ideas, and improvements are welcome.
+Suggestions, feedback, and improvements are welcome.
 
-Feel free to open an issue or submit a pull request.
+Feel free to open issues or submit pull requests.
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the MIT License.
+MIT License
